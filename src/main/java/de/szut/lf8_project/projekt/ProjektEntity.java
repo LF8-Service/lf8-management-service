@@ -19,20 +19,17 @@ public class ProjektEntity {
     private String description;
 
     @OneToOne(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL,
-            mappedBy = "coworker")
+            cascade =  CascadeType.ALL)
     private CoworkerEntity responsableCoworker;
 
     @OneToMany(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL,
-            mappedBy = "coworker")
+            cascade =  CascadeType.ALL)
     private List<CoworkerEntity> coworkers;
 
     private int customerId;
 
     @OneToOne(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL,
-            mappedBy = "coworker")
+            cascade =  CascadeType.ALL)
     private CoworkerEntity customerCoworker;
 
     private String comment;

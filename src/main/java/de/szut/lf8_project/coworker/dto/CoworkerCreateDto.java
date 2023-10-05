@@ -16,4 +16,7 @@ public class CoworkerCreateDto {
     @NotBlank(message = "Age is mandatory")
     @Size(max = 3, message = "Age must not exceed 3 characters")
     private int age;
+    @NotBlank(message = "Qualification is mandatory")
+    @Size(max = 30, message = "Qualification must not exceed 30 characters")
+    private String qualification;
 }

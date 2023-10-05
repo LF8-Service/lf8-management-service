@@ -76,7 +76,8 @@ public class ProjektMapper {
         dto.setDescription(projekt.getDescription());
         List<CoworkerGetDto> allCoworkers = new ArrayList<>();
         for (CoworkerEntity coworker: projekt.getCoworkers()) {
-            CoworkerGetDto cDto = new CoworkerGetDto();
+            CoworkerGetDto cDto = new CoworkerGetDto(coworker.getCoworkerId(), coworker.getName(), coworker.getSurname(),
+                    coworker.getAge(), coworker.getQualifikation());
             cDto.setCoworkerId(coworker.getCoworkerId());
             cDto.setName(coworker.getName());
             cDto.setSurname(coworker.getSurname());
