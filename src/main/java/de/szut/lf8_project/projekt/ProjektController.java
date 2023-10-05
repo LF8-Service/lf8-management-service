@@ -1,9 +1,8 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.coworker.CoworkerEntity;
+import de.szut.lf8_project.coworker.CoworkerRole;
 import de.szut.lf8_project.coworker.dto.GetAllCoworkersByProjektIdDto;
 import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
-import de.szut.lf8_project.hello.dto.HelloCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektGetDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "projekt")
+@RequestMapping(value = "/service/projekt")
 
 public class ProjektController {
     private final ProjektService service;
@@ -39,12 +38,20 @@ public class ProjektController {
             @ApiResponse(responseCode = "400", description = "invalid JSON posted",
                     content = @Content),
             @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Head Coworker or Customer were not found",
                     content = @Content)})
     @PostMapping
     public ProjektGetDto create(@RequestBody @Valid ProjektCreateDto projektCreateDto) {
         ProjektEntity projektEntity = this.projektMapper.mapProjektCreateDtoToProjekt(projektCreateDto);
         projektEntity = this.service.create(projektEntity);
         return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
+    }
+
+    public boolean isQualificationValid(String qualification){
+        return qualification.equals(CoworkerRole.customer_coworker.toString()) ||
+        qualification.equals(CoworkerRole.projekt_head.toString()) ||
+        qualification.equals(CoworkerRole.developer.toString());
     }
 
     @Operation(summary = "delivers a list of projekts")
@@ -62,7 +69,24 @@ public class ProjektController {
                 .map(e -> this.projektMapper.mapProjektToProjektGetDto(e))
                 .collect(Collectors.toList());
     }
-
+    @Operation(summary = "Get a projekt by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "project was received",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ProjektGetDto.class))}),
+            @ApiResponse(responseCode = "401", description = "not authorized",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "resource not found",
+                    content = @Content)})
+    @GetMapping("/{id}")
+    public ProjektGetDto getProjektById(@PathVariable long id) {
+        var entity = this.service.readById(id);
+        if (entity == null) {
+            throw new ResourceNotFoundException("ProjektEntity not found on id = " + id);
+        } else {
+            return this.projektMapper.mapProjektToProjektGetDto(entity);
+        }
+    }
     @Operation(summary = "deletes a projekt by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "delete successful"),

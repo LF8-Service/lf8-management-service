@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class ProjektCreateDto {
 
+    @NotBlank(message = "Description is mandatory")
+    @Size(max = 100, message = "Description must not exceed 100 characters")
     private String description;
 
     @NotBlank(message = "Responsable Coworker is mandatory")

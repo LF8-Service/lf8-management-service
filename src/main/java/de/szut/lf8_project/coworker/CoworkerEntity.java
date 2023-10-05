@@ -15,10 +15,6 @@ public class CoworkerEntity {
     private int coworkerId;
     private String name;
     private String surname;
-    private int age;
-    @ManyToMany (fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL,
-            mappedBy = "coworker")
-    private List<ProjektEntity> projektList;
-    private String qualifikation ;
+    private long age;
+    private String qualification ;
 }
