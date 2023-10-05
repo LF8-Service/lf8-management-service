@@ -1,5 +1,7 @@
 package de.szut.lf8_project.hello;
 
+import de.szut.lf8_project.coworker.CoworkerMapper;
+import de.szut.lf8_project.coworker.CoworkerService;
 import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
 import de.szut.lf8_project.hello.dto.HelloCreateDto;
 import de.szut.lf8_project.hello.dto.HelloGetDto;
