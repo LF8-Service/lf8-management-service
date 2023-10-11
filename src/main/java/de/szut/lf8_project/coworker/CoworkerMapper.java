@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class CoworkerMapper {
     public CoworkerGetDto mapToGetDto(CoworkerEntity entity) {
         CoworkerGetDto coworkerGetDto = new CoworkerGetDto();
+        coworkerGetDto.setCoworkerId(entity.getCoworkerId());
         coworkerGetDto.setName(entity.getName());
         coworkerGetDto.setSurname(entity.getSurname());
         coworkerGetDto.setAge(entity.getAge());

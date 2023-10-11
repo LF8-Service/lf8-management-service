@@ -16,7 +16,7 @@ public class ProjektGetDto {
 
     private List<CoworkerEntity> coworkers;
 
-    private int customerId;
+    private long customerId;
 
     private CoworkerEntity customerCoworker;
 

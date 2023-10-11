@@ -1,5 +1,7 @@
 package de.szut.lf8_project.projekt;
 
+import com.github.dockerjava.api.exception.BadRequestException;
+import de.szut.lf8_project.coworker.CoworkerEntity;
 import de.szut.lf8_project.coworker.CoworkerRole;
 import de.szut.lf8_project.coworker.dto.GetAllCoworkersByProjektIdDto;
 import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,14 +47,25 @@ public class ProjektController {
     @PostMapping
     public ProjektGetDto create(@RequestBody @Valid ProjektCreateDto projektCreateDto) {
         ProjektEntity projektEntity = this.projektMapper.mapProjektCreateDtoToProjekt(projektCreateDto);
+        checkCoworkersQualificationInOneProject(projektEntity.getProjektId());
         projektEntity = this.service.create(projektEntity);
         return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
     }
 
-    public boolean isQualificationValid(String qualification){
-        return qualification.equals(CoworkerRole.customer_coworker.toString()) ||
-        qualification.equals(CoworkerRole.projekt_head.toString()) ||
-        qualification.equals(CoworkerRole.developer.toString());
+    public void checkCoworkersQualificationInOneProject(long projectId){
+        var entity = this.service.readById(projectId);
+        if(!entity.getResponsableCoworker().getQualification().equals(CoworkerRole.projekt_head.toString())){
+            throw new BadRequestException("Project head doesn't have this qualification");
+        }
+        if(!entity.getCustomerCoworker().getQualification().equals(CoworkerRole.customer_coworker.toString())){
+            throw new BadRequestException("Customer Coworker doesn't have this qualification");
+        }
+
+        for(CoworkerEntity coworker:entity.getCoworkers()){
+            if(!coworker.getQualification().equals(CoworkerRole.developer.toString())){
+                throw new BadRequestException("Developer doesn't have this qualification");
+            }
+        }
     }
 
     @Operation(summary = "delivers a list of projekts")

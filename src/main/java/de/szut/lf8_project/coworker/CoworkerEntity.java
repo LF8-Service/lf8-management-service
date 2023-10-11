@@ -12,7 +12,7 @@ import java.util.*;
 public class CoworkerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int coworkerId;
+    private long coworkerId;
     private String name;
     private String surname;
     private long age;

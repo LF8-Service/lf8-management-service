@@ -10,8 +10,8 @@ import javax.persistence.*;
 public class CustomerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int customerId;
+    private long customerId;
     private String name;
     private String surname;
-    private int age;
+    private long age;
 }

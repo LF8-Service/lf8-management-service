@@ -26,7 +26,7 @@ public class ProjektEntity {
             cascade =  CascadeType.ALL)
     private List<CoworkerEntity> coworkers;
 
-    private int customerId;
+    private long customerId;
 
     @OneToOne(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)

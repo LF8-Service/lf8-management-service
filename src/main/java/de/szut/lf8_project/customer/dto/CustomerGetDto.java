@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class CustomerGetDto {
-    private int customerId;
+    private long customerId;
     private String name;
     private String surname;
-    private int age;
+    private long age;
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Data
 public class CoworkerGetDto {
-    private int coworkerId;
+    private long coworkerId;
     private String name;
     private String surname;
     private long age;
