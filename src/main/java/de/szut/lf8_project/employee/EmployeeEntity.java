@@ -1,11 +1,13 @@
 package de.szut.lf8_project.employee;
 
-import de.szut.lf8_project.qualification.Qualification;
+
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -13,13 +15,13 @@ import java.util.List;
 public class EmployeeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    String lastName;
-    String firstName;
-    String Street;
-    String postcode;
-    String city;
-    String phone;
-    @ElementCollection
-    List<String> skillSet = new ArrayList<>();
+    private long id;
+    private String lastName;
+    private String firstName;
+    private String street;
+    private String postcode;
+    private String city;
+    private String phone;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<SkillSet> skillSet = new ArrayList<>();
 }

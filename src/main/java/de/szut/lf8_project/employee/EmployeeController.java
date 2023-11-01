@@ -2,7 +2,11 @@ package de.szut.lf8_project.employee;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.szut.lf8_project.projekt.ProjektController;
+import de.szut.lf8_project.projekt.ProjektMapper;
+import de.szut.lf8_project.projekt.ProjektService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeController {

@@ -4,6 +4,7 @@ package de.szut.lf8_project.projekt;
 import de.szut.lf8_project.projekt.dto.ProjektCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektGetDto;
 import de.szut.lf8_project.projekt.dto.ProjektUpdateDto;
+import de.szut.lf8_project.projekt.entity.ProjektEntity;
 import org.springframework.stereotype.Service;
 
 @Service

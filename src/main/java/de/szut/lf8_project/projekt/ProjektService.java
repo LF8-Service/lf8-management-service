@@ -1,5 +1,6 @@
 package de.szut.lf8_project.projekt;
 
+import de.szut.lf8_project.projekt.entity.ProjektEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
