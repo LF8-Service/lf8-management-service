@@ -20,7 +20,6 @@ public class EmployeeEntity {
     String postcode;
     String city;
     String phone;
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL)
-    List<Qualification> skillSet = new ArrayList<>();
+    @ElementCollection
+    List<String> skillSet = new ArrayList<>();
 }

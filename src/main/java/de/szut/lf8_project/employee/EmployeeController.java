@@ -44,7 +44,7 @@ public class EmployeeController {
 
     public static void main(String[] args) {
         EmployeeController employeeController = new EmployeeController();
-        employeeController.isEmployeesIdExists(2);
+      System.out.println(employeeController.isEmployeesIdExists(2));
     }
 
 }
