@@ -1,20 +1,10 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.employee.EmployeeEntity;
-import de.szut.lf8_project.employee.EmployeesId;
 
-
-import de.szut.lf8_project.projekt.dto.GetAllEmployeesByProjektIdDto;
 import de.szut.lf8_project.projekt.dto.ProjektCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektGetDto;
 import de.szut.lf8_project.projekt.dto.ProjektUpdateDto;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProjektMapper {
@@ -24,21 +14,11 @@ public class ProjektMapper {
         newDto.setProjektId(entity.getProjektId());
         newDto.setDescription(entity.getDescription());
         newDto.setCustomerId(entity.getCustomerId());
-
-        EmployeesId responsableEmployee = new EmployeesId();
-        responsableEmployee.setId(entity.getResponsableEmployee().getId());
-        newDto.setResponsableEmployee(responsableEmployee);
-
-        EmployeesId customerEmployee = new EmployeesId();
-        customerEmployee.setId(entity.getCustomerEmployee().getId());
-        newDto.setCustomerEmployee(customerEmployee);
-
-        for (int i=0;i<entity.getEmployees().toArray().length;i++) {
-            EmployeesId employeesId = new EmployeesId();
-            employeesId.setId(entity.getEmployees().get(i).getId());
+        newDto.setResponsableEmployeeId(entity.getResponsableEmployeeId());
+        newDto.setCustomerEmployeeId(entity.getCustomerEmployeeId());
+        for (Long employeesId:entity.getEmployees()) {
             newDto.getEmployees().add(employeesId);
         }
-
         newDto.setComment(entity.getComment());
         newDto.setStartDate(entity.getStartDate());
         newDto.setEndDate_planned(entity.getEndDate_planned());
@@ -48,21 +28,11 @@ public class ProjektMapper {
 
     public ProjektEntity mapProjektCreateDtoToProjekt(ProjektCreateDto dto) {
         ProjektEntity newProjekt = new ProjektEntity();
-
         newProjekt.setDescription(dto.getDescription());
         newProjekt.setCustomerId(dto.getCustomerId());
-
-        EmployeesId responsableEmployee = new EmployeesId();
-        responsableEmployee.setId(dto.getResponsableEmployee().getId());
-        newProjekt.setResponsableEmployee(responsableEmployee);
-
-        EmployeesId customerEmployee = new EmployeesId();
-        customerEmployee.setId(dto.getCustomerEmployee().getId());
-        newProjekt.setCustomerEmployee(customerEmployee);
-
-        for (int i=0;i<dto.getEmployees().toArray().length;i++) {
-            EmployeesId employeesId = new EmployeesId();
-            employeesId.setId(dto.getEmployees().get(i).getId());
+        newProjekt.setResponsableEmployeeId(dto.getResponsableEmployeeId());
+        newProjekt.setCustomerEmployeeId(dto.getCustomerEmployeeId());
+        for (Long employeesId:dto.getEmployees()) {
             newProjekt.getEmployees().add(employeesId);
         }
         newProjekt.setComment(dto.getComment());
@@ -75,24 +45,36 @@ public class ProjektMapper {
         ProjektEntity newProjekt = new ProjektEntity();
 
         newProjekt.setProjektId(id);
-        newProjekt.setDescription(dto.getDescription());
-
-        EmployeesId responsableEmployee = new EmployeesId();
-        responsableEmployee.setId(dto.getResponsableEmployee().getId());
-        newProjekt.setResponsableEmployee(responsableEmployee);
-
-        EmployeesId customerEmployee = new EmployeesId();
-        customerEmployee.setId(dto.getCustomerEmployee().getId());
-        newProjekt.setCustomerEmployee(customerEmployee);
-
-        for (int i=0;i<dto.getEmployees().toArray().length;i++) {
-            EmployeesId employeesId = new EmployeesId();
-            employeesId.setId(dto.getEmployees().get(i).getId());
-            newProjekt.getEmployees().add(employeesId);
+        try {
+            newProjekt.setDescription(dto.getDescription());
         }
-        newProjekt.setComment(dto.getComment());
-        newProjekt.setEndDate_planned(dto.getEndDate_planned());
-        newProjekt.setEndDate_actual(dto.getEndDate_actual());
+        catch (NullPointerException ignored){}
+        try {
+            newProjekt.setResponsableEmployeeId(dto.getResponsableEmployeeId());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            newProjekt.setCustomerEmployeeId(dto.getCustomerEmployeeId());
+        }
+        catch (NullPointerException ignored){}
+       try {
+           for (Long employeesId:dto.getEmployees()) {
+               newProjekt.getEmployees().add(employeesId);
+           }
+        }
+        catch (NullPointerException ignored){}
+        try {
+            newProjekt.setComment(dto.getComment());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            newProjekt.setEndDate_planned(dto.getEndDate_planned());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            newProjekt.setEndDate_actual(dto.getEndDate_actual());
+        }
+        catch (NullPointerException ignored){}
         return newProjekt;
     }
 }

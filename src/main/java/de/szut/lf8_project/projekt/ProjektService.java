@@ -1,11 +1,7 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.employee.EmployeeEntity;
-import de.szut.lf8_project.employee.EmployeesId;
-import de.szut.lf8_project.hello.HelloEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,26 +37,41 @@ public class ProjektService {
         ProjektEntity updatedProjekt = readById(projekt.getProjektId());
 
         updatedProjekt.setProjektId(id);
-        updatedProjekt.setDescription(projekt.getDescription());
-
-        EmployeesId responsableEmployee = new EmployeesId();
-        responsableEmployee.setId(projekt.getResponsableEmployee().getId());
-        updatedProjekt.setResponsableEmployee(responsableEmployee);
-
-        EmployeesId customerEmployee = new EmployeesId();
-        customerEmployee.setId(projekt.getCustomerEmployee().getId());
-        updatedProjekt.setCustomerEmployee(responsableEmployee);
-
-        updatedProjekt.getEmployees().clear();
-        List<EmployeesId> newEmployee = projekt.getEmployees();
-        for(EmployeesId employeesId: newEmployee){
-            updatedProjekt.getEmployees().add(employeesId);
+        try {
+            updatedProjekt.setDescription(projekt.getDescription());
         }
-
-        updatedProjekt.setComment(projekt.getComment());
-        updatedProjekt.setStartDate(projekt.getStartDate());
-        updatedProjekt.setEndDate_planned(projekt.getEndDate_planned());
-        updatedProjekt.setEndDate_actual(projekt.getEndDate_actual());
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setResponsableEmployeeId(projekt.getResponsableEmployeeId());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setCustomerEmployeeId(projekt.getCustomerEmployeeId());
+        }
+        catch (NullPointerException ignored){}
+          try {
+            updatedProjekt.getEmployees().clear();
+            for (Long employeesId : projekt.getEmployees()) {
+                updatedProjekt.getEmployees().add(employeesId);
+            }
+        }
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setComment(projekt.getComment());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setStartDate(projekt.getStartDate());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setEndDate_planned(projekt.getEndDate_planned());
+        }
+        catch (NullPointerException ignored){}
+        try {
+            updatedProjekt.setEndDate_actual(projekt.getEndDate_actual());
+        }
+        catch (NullPointerException ignored){}
         return this.repository.save(updatedProjekt);
     }
 }

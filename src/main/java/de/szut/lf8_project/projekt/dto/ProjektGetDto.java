@@ -1,7 +1,5 @@
 package de.szut.lf8_project.projekt.dto;
 
-import de.szut.lf8_project.employee.EmployeeEntity;
-import de.szut.lf8_project.employee.EmployeesId;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,13 +12,13 @@ public class ProjektGetDto {
 
     private String description;
 
-    private EmployeesId responsableEmployee;
+    private Long responsableEmployeeId;
 
-    private List<EmployeesId> employees = new ArrayList<>();
+    private List<Long> employees = new ArrayList<>();
 
     private long customerId;
 
-    private EmployeesId customerEmployee;
+    private Long customerEmployeeId;
 
     private String comment;
 

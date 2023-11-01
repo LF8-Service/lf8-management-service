@@ -1,7 +1,5 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.employee.EmployeeEntity;
-import de.szut.lf8_project.employee.EmployeesId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,19 +17,14 @@ public class ProjektEntity {
     private long projektId;
 
     private String description;
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL)
-    private EmployeesId responsableEmployee;
 
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL)
-    private List<EmployeesId> employees = new ArrayList<>();
+    private long responsableEmployeeId;
+    @ElementCollection
+    private List<Long> employees = new ArrayList<>();
 
     private long customerId;
 
-    @ManyToOne(fetch = FetchType.EAGER,
-            cascade =  CascadeType.ALL)
-    private EmployeesId customerEmployee;
+    private long customerEmployeeId;
 
     private String comment;
 

@@ -1,8 +1,8 @@
 package de.szut.lf8_project.projekt;
 
+import com.github.dockerjava.api.exception.BadRequestException;
 import de.szut.lf8_project.employee.EmployeeController;
 import de.szut.lf8_project.employee.EmployeeEntity;
-import de.szut.lf8_project.employee.EmployeesId;
 import de.szut.lf8_project.exceptionHandling.ResourceNotFoundException;
 import de.szut.lf8_project.projekt.dto.ProjektCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektGetDto;
@@ -46,27 +46,27 @@ public class ProjektController {
     @PostMapping
     public ProjektGetDto create(@RequestBody @Valid ProjektCreateDto projektCreateDto) {
         ProjektEntity projektEntity = this.projektMapper.mapProjektCreateDtoToProjekt(projektCreateDto);
-        //   if(checkEmployeesIdInOneProjekt(projektEntity)) {
+        if(checkEmployeesIdInOneProjekt(projektEntity)) {
         projektEntity = this.service.create(projektEntity);
         return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
-        // }
-        //else {
-        //  throw new BadRequestException("Employees don't exist");
-        //}
+         }
+        else {
+          throw new BadRequestException("Employees don't exist");
+        }
     }
 
     private boolean checkEmployeesIdInOneProjekt(ProjektEntity projekt) {
         List<EmployeeEntity> employees = employeeController.getAllEmployees();
-        boolean isResponsableEmployeeExist =  employeeController.checkEmployeeIdInList(projekt.getResponsableEmployee().getId(), employees);
+        boolean isResponsableEmployeeExist =  employeeController.checkEmployeeIdInList(projekt.getResponsableEmployeeId(), employees);
         if (!isResponsableEmployeeExist) {
             return false;
         }
-        boolean isCustomerEmployeeExist = employeeController.checkEmployeeIdInList(projekt.getCustomerEmployee().getId(), employees);
+        boolean isCustomerEmployeeExist = employeeController.checkEmployeeIdInList(projekt.getCustomerEmployeeId(), employees);
         if (!isCustomerEmployeeExist) {
             return false;
         }
-        for (EmployeesId employeesId : projekt.getEmployees()) {
-            boolean isIdExist = employeeController.checkEmployeeIdInList(employeesId.getId(), employees);
+        for (Long employeesId : projekt.getEmployees()) {
+            boolean isIdExist = employeeController.checkEmployeeIdInList(employeesId, employees);
             if (!isIdExist) {
                 return false;
             }
