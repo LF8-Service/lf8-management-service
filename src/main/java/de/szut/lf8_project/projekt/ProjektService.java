@@ -1,8 +1,11 @@
 package de.szut.lf8_project.projekt;
 
+import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.EmployeesId;
 import de.szut.lf8_project.hello.HelloEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,8 +37,30 @@ public class ProjektService {
     public void delete(ProjektEntity entity) {
         this.repository.delete(entity);
     }
-    public List<ProjektEntity> findByDescription(String description) {
-        return this.repository.findByDescription(description);
-    }
+    public ProjektEntity update(ProjektEntity projekt, long id){
+        ProjektEntity updatedProjekt = readById(projekt.getProjektId());
 
+        updatedProjekt.setProjektId(id);
+        updatedProjekt.setDescription(projekt.getDescription());
+
+        EmployeesId responsableEmployee = new EmployeesId();
+        responsableEmployee.setId(projekt.getResponsableEmployee().getId());
+        updatedProjekt.setResponsableEmployee(responsableEmployee);
+
+        EmployeesId customerEmployee = new EmployeesId();
+        customerEmployee.setId(projekt.getCustomerEmployee().getId());
+        updatedProjekt.setCustomerEmployee(responsableEmployee);
+
+        updatedProjekt.getEmployees().clear();
+        List<EmployeesId> newEmployee = projekt.getEmployees();
+        for(EmployeesId employeesId: newEmployee){
+            updatedProjekt.getEmployees().add(employeesId);
+        }
+
+        updatedProjekt.setComment(projekt.getComment());
+        updatedProjekt.setStartDate(projekt.getStartDate());
+        updatedProjekt.setEndDate_planned(projekt.getEndDate_planned());
+        updatedProjekt.setEndDate_actual(projekt.getEndDate_actual());
+        return this.repository.save(updatedProjekt);
+    }
 }

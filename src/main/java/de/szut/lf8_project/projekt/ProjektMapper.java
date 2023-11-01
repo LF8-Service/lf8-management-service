@@ -1,12 +1,18 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.coworker.CoworkerEntity;
-import de.szut.lf8_project.coworker.dto.CoworkerGetDto;
-import de.szut.lf8_project.coworker.dto.GetAllCoworkersByProjektIdDto;
+import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.EmployeesId;
+
+
+import de.szut.lf8_project.projekt.dto.GetAllEmployeesByProjektIdDto;
 import de.szut.lf8_project.projekt.dto.ProjektCreateDto;
 import de.szut.lf8_project.projekt.dto.ProjektGetDto;
+import de.szut.lf8_project.projekt.dto.ProjektUpdateDto;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,21 +25,19 @@ public class ProjektMapper {
         newDto.setDescription(entity.getDescription());
         newDto.setCustomerId(entity.getCustomerId());
 
-        CoworkerEntity responsableCoworker = new CoworkerEntity();
-        responsableCoworker.setCoworkerId(entity.getResponsableCoworker().getCoworkerId());
-        responsableCoworker.setName(entity.getResponsableCoworker().getName());
-        responsableCoworker.setSurname(entity.getResponsableCoworker().getSurname());
-        responsableCoworker.setAge(entity.getResponsableCoworker().getAge());
+        EmployeesId responsableEmployee = new EmployeesId();
+        responsableEmployee.setId(entity.getResponsableEmployee().getId());
+        newDto.setResponsableEmployee(responsableEmployee);
 
-        newDto.setResponsableCoworker(responsableCoworker);
+        EmployeesId customerEmployee = new EmployeesId();
+        customerEmployee.setId(entity.getCustomerEmployee().getId());
+        newDto.setCustomerEmployee(customerEmployee);
 
-        CoworkerEntity customerCoworker = new CoworkerEntity();
-        customerCoworker.setCoworkerId(entity.getResponsableCoworker().getCoworkerId());
-        customerCoworker.setName(entity.getResponsableCoworker().getName());
-        customerCoworker.setSurname(entity.getResponsableCoworker().getSurname());
-        customerCoworker.setAge(entity.getResponsableCoworker().getAge());
-
-        newDto.setCustomerCoworker(entity.getCustomerCoworker());
+        for (int i=0;i<entity.getEmployees().toArray().length;i++) {
+            EmployeesId employeesId = new EmployeesId();
+            employeesId.setId(entity.getEmployees().get(i).getId());
+            newDto.getEmployees().add(employeesId);
+        }
 
         newDto.setComment(entity.getComment());
         newDto.setStartDate(entity.getStartDate());
@@ -44,46 +48,51 @@ public class ProjektMapper {
 
     public ProjektEntity mapProjektCreateDtoToProjekt(ProjektCreateDto dto) {
         ProjektEntity newProjekt = new ProjektEntity();
+
         newProjekt.setDescription(dto.getDescription());
         newProjekt.setCustomerId(dto.getCustomerId());
 
-        CoworkerEntity responsableCoworker = new CoworkerEntity();
-        responsableCoworker.setCoworkerId(dto.getResponsableCoworker().getCoworkerId());
-        responsableCoworker.setName(dto.getResponsableCoworker().getName());
-        responsableCoworker.setSurname(dto.getResponsableCoworker().getSurname());
-        responsableCoworker.setAge(dto.getResponsableCoworker().getAge());
+        EmployeesId responsableEmployee = new EmployeesId();
+        responsableEmployee.setId(dto.getResponsableEmployee().getId());
+        newProjekt.setResponsableEmployee(responsableEmployee);
 
-        newProjekt.setResponsableCoworker(responsableCoworker);
+        EmployeesId customerEmployee = new EmployeesId();
+        customerEmployee.setId(dto.getCustomerEmployee().getId());
+        newProjekt.setCustomerEmployee(customerEmployee);
 
-        CoworkerEntity customerCoworker = new CoworkerEntity();
-        customerCoworker.setCoworkerId(dto.getResponsableCoworker().getCoworkerId());
-        customerCoworker.setName(dto.getResponsableCoworker().getName());
-        customerCoworker.setSurname(dto.getResponsableCoworker().getSurname());
-        customerCoworker.setAge(dto.getResponsableCoworker().getAge());
-
-        newProjekt.setCustomerCoworker(dto.getCustomerCoworker());
-
-        newProjekt.setCustomerCoworker(dto.getCustomerCoworker());
+        for (int i=0;i<dto.getEmployees().toArray().length;i++) {
+            EmployeesId employeesId = new EmployeesId();
+            employeesId.setId(dto.getEmployees().get(i).getId());
+            newProjekt.getEmployees().add(employeesId);
+        }
         newProjekt.setComment(dto.getComment());
         newProjekt.setStartDate(dto.getStartDate());
         newProjekt.setEndDate_planned(dto.getEndDate_planned());
         newProjekt.setEndDate_actual(dto.getEndDate_actual());
         return newProjekt;
     }
+    public ProjektEntity mapProjektUpdateDtoToProjekt(ProjektUpdateDto dto, long id) {
+        ProjektEntity newProjekt = new ProjektEntity();
 
-    public GetAllCoworkersByProjektIdDto mapProjektToAllCoworkersByProjektIdDto(ProjektEntity projekt){
-        GetAllCoworkersByProjektIdDto dto = new GetAllCoworkersByProjektIdDto();
-        dto.setDescription(projekt.getDescription());
-        List<CoworkerGetDto> allCoworkers = new ArrayList<>();
-        for (CoworkerEntity coworker: projekt.getCoworkers()) {
-            CoworkerGetDto cDto = new CoworkerGetDto();
-            cDto.setCoworkerId(coworker.getCoworkerId());
-            cDto.setName(coworker.getName());
-            cDto.setSurname(coworker.getSurname());
-            cDto.setAge(coworker.getAge());
-            allCoworkers.add(cDto);
+        newProjekt.setProjektId(id);
+        newProjekt.setDescription(dto.getDescription());
+
+        EmployeesId responsableEmployee = new EmployeesId();
+        responsableEmployee.setId(dto.getResponsableEmployee().getId());
+        newProjekt.setResponsableEmployee(responsableEmployee);
+
+        EmployeesId customerEmployee = new EmployeesId();
+        customerEmployee.setId(dto.getCustomerEmployee().getId());
+        newProjekt.setCustomerEmployee(customerEmployee);
+
+        for (int i=0;i<dto.getEmployees().toArray().length;i++) {
+            EmployeesId employeesId = new EmployeesId();
+            employeesId.setId(dto.getEmployees().get(i).getId());
+            newProjekt.getEmployees().add(employeesId);
         }
-        dto.setAllCoworkers(allCoworkers);
-        return dto;
+        newProjekt.setComment(dto.getComment());
+        newProjekt.setEndDate_planned(dto.getEndDate_planned());
+        newProjekt.setEndDate_actual(dto.getEndDate_actual());
+        return newProjekt;
     }
 }

@@ -1,10 +1,12 @@
 package de.szut.lf8_project.projekt;
 
-import de.szut.lf8_project.coworker.CoworkerEntity;
+import de.szut.lf8_project.employee.EmployeeEntity;
+import de.szut.lf8_project.employee.EmployeesId;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,20 +19,19 @@ public class ProjektEntity {
     private long projektId;
 
     private String description;
-
-    @OneToOne(fetch = FetchType.EAGER,
+    @ManyToOne(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
-    private CoworkerEntity responsableCoworker;
+    private EmployeesId responsableEmployee;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
-    private List<CoworkerEntity> coworkers;
+    private List<EmployeesId> employees = new ArrayList<>();
 
     private long customerId;
 
-    @OneToOne(fetch = FetchType.EAGER,
+    @ManyToOne(fetch = FetchType.EAGER,
             cascade =  CascadeType.ALL)
-    private CoworkerEntity customerCoworker;
+    private EmployeesId customerEmployee;
 
     private String comment;
 
