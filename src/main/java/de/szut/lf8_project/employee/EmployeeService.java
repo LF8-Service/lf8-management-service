@@ -91,8 +91,4 @@ public class EmployeeService {
         return "404";
     }
 
-    public static void main(String[] args) {
-        EmployeeService em= new EmployeeService();
-       System.out.println(em.getAccessToken());
-    }
 }

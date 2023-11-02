@@ -22,6 +22,14 @@ public class EmployeeEntity {
     private String postcode;
     private String city;
     private String phone;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SkillSet> skillSet = new ArrayList<>();
+
+    /*
+    @ElementCollection
+    private List<String> skillSet = new ArrayList<>();
+     */
+
 }
+

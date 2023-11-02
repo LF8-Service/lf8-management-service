@@ -50,35 +50,13 @@ public class ProjektController {
     @PostMapping("/projekt")
     public ProjektGetDto create(@RequestBody @Valid ProjektCreateDto projektCreateDto) {
         ProjektEntity projektEntity = this.projektMapper.mapProjektCreateDtoToProjekt(projektCreateDto);
-        if(checkEmployeesIdInOneProjekt(projektEntity)) {
-        projektEntity = this.service.create(projektEntity);
-        return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
-         }
-        else {
-          throw new BadRequestException("Employees don't exist");
+        if (employeeController.checkEmployeesIdInOneProjekt(projektEntity)) {
+            projektEntity = this.service.create(projektEntity);
+            return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
+        } else {
+            throw new BadRequestException("Employees don't exist");
         }
     }
-
-    private boolean checkEmployeesIdInOneProjekt(ProjektEntity projekt) {
-        List<EmployeeEntity> employees = employeeController.getAllEmployees();
-        boolean isResponsableEmployeeExist =  employeeController.checkEmployeeIdInList(projekt.getResponsableEmployeeId(), employees);
-        if (!isResponsableEmployeeExist) {
-            return false;
-        }
-        boolean isCustomerEmployeeExist = employeeController.checkEmployeeIdInList(projekt.getCustomerEmployeeId(), employees);
-        if (!isCustomerEmployeeExist) {
-            return false;
-        }
-        for (Long employeesId : projekt.getEmployees()) {
-            boolean isIdExist = employeeController.checkEmployeeIdInList(employeesId, employees);
-            if (!isIdExist) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
 
     @Operation(summary = "delivers a list of projekts")
     @ApiResponses(value = {
@@ -141,24 +119,27 @@ public class ProjektController {
             @ApiResponse(responseCode = "401", description = "not authorized",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "resource not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Employees don't exist",
                     content = @Content)})
     @PostMapping("/projekt/{id}")
     public ProjektGetDto updateProjekt(@RequestBody @Valid ProjektUpdateDto projektUpdateDto, @PathVariable long id) {
-        ProjektEntity projektEntity = this.projektMapper.mapProjektUpdateDtoToProjekt(projektUpdateDto,id);
-           if(checkEmployeesIdInOneProjekt(projektEntity)) {
-        projektEntity = this.service.update(projektEntity,id);
-        return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
-         }
-        else {
-          throw new BadRequestException("Employees don't exist");
+        ProjektEntity projektEntity = this.projektMapper.mapProjektUpdateDtoToProjekt(projektUpdateDto, id);
+        System.out.println(projektUpdateDto.getDescription());
+        System.out.println(projektEntity.getDescription());
+        ProjektEntity updatedProjekt  = this.service.update(projektEntity, id);
+         if (employeeController.checkEmployeesIdInOneProjekt(updatedProjekt)) {
+            return this.projektMapper.mapProjektToProjektGetDto(projektEntity);
+        } else {
+            throw new BadRequestException("Employees don't exist");
         }
     }
 
 
-    public List<ProjektsEmployees> getEmployeesInProjekts(){
+    public List<ProjektsEmployees> getEmployeesInProjekts() {
         List<ProjektGetDto> projektsDto = findAll();
         List<ProjektsEmployees> projektsEmployeesList = new ArrayList<>();
-        for(ProjektGetDto projektGetDto: projektsDto){
+        for (ProjektGetDto projektGetDto : projektsDto) {
 
             ProjektsEmployees projektsEmployees = new ProjektsEmployees();
             projektsEmployees.setProjektId(projektGetDto.getProjektId());
@@ -168,19 +149,19 @@ public class ProjektController {
             projektsEmployees.getEmployeeIds().add(projektGetDto.getResponsableEmployeeId());
             projektsEmployees.getEmployeeIds().add(projektGetDto.getCustomerEmployeeId());
 
-            for(long employeeId=0; employeeId<projektGetDto.getEmployees().toArray().length;employeeId++){
-                boolean isTheSameId =  Objects.equals(employeeId, projektGetDto.getResponsableEmployeeId()) || Objects.equals(employeeId, projektGetDto.getCustomerEmployeeId());
-                if(isTheSameId){
+            for (long employeeId = 0; employeeId < projektGetDto.getEmployees().toArray().length; employeeId++) {
+                boolean isTheSameId = Objects.equals(employeeId, projektGetDto.getResponsableEmployeeId()) || Objects.equals(employeeId, projektGetDto.getCustomerEmployeeId());
+                if (isTheSameId) {
                     employeeId++;
-                }
-                else{
-                    projektsEmployees.getEmployeeIds().add(projektGetDto.getEmployees().get((int)employeeId));
+                } else {
+                    projektsEmployees.getEmployeeIds().add(projektGetDto.getEmployees().get((int) employeeId));
                 }
             }
             projektsEmployeesList.add(projektsEmployees);
         }
         return projektsEmployeesList;
     }
+
     @Operation(summary = "Find all employee projekts by employee's id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "projects was received",
@@ -191,13 +172,13 @@ public class ProjektController {
             @ApiResponse(responseCode = "404", description = "resource not found",
                     content = @Content)})
     @GetMapping("/employee/{employeeId}")
-    public List<Long> findEmployeeInProjekts(@PathVariable long employeeId){
+    public List<Long> findEmployeeInProjekts(@PathVariable long employeeId) {
         List<Long> projektsId = new ArrayList<>();
         List<ProjektsEmployees> projektsEmployees = getEmployeesInProjekts();
-        for(int i=0;i<projektsEmployees.toArray().length;i++){
-            for(int k=0;k<projektsEmployees.get(i).getEmployeeIds().toArray().length;k++){
+        for (int i = 0; i < projektsEmployees.toArray().length; i++) {
+            for (int k = 0; k < projektsEmployees.get(i).getEmployeeIds().toArray().length; k++) {
                 boolean isEmployeeInProjekt = projektsEmployees.get(i).getEmployeeIds().get(k).equals(employeeId);
-                if(isEmployeeInProjekt){
+                if (isEmployeeInProjekt) {
                     projektsId.add(projektsEmployees.get(i).getProjektId());
                     break;
                 }
